@@ -47,10 +47,12 @@ int p101_shmctl(const struct p101_env *env, struct p101_error *err, int shmid, i
 
 int p101_shmdt(const struct p101_env *env, struct p101_error *err, const void *shmaddr)
 {
-    int ret_val;
+    char resource_id[P101_ENV_POINTER_RESOURCE_ID_SIZE];
+    int  ret_val;
 
     P101_TRACE(env);
     P101_WRAPPER_FAULT_RETURN(env, err, -1);
+    p101_env_pointer_resource_id(resource_id, sizeof(resource_id), shmaddr);
     errno   = 0;
     ret_val = shmdt(shmaddr);
 
@@ -60,7 +62,7 @@ int p101_shmdt(const struct p101_env *env, struct p101_error *err, const void *s
     }
     else
     {
-        P101_TRACK_POINTER_RESOURCE_RELEASE(env, "sysv-shared-memory-attachment", shmaddr, NULL);
+        P101_TRACK_RESOURCE_RELEASE(env, "sysv-shared-memory-attachment", resource_id, NULL);
     }
 
     P101_TRACE_EXIT(env);
