@@ -7,7 +7,7 @@ key_t p101_ftok(const struct p101_env *env, struct p101_error *err, const char *
     key_t ret_val;
 
     P101_TRACE(env);
-    P101_WRAPPER_FAULT_RETURN(env, err, -1);
+    P101_WRAPPER_FAULT_RETURN(env, err, ret_val, -1);
     errno   = 0;
     ret_val = ftok(path, id);
 
@@ -16,6 +16,6 @@ key_t p101_ftok(const struct p101_env *env, struct p101_error *err, const char *
         P101_ERROR_RAISE_ERRNO(err, errno);
     }
 
-    P101_TRACE_EXIT(env);
+    P101_WRAPPER_DONE(env);
     return ret_val;
 }

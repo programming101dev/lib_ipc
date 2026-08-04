@@ -10,16 +10,18 @@ static int semctl_uses_arg(int cmd)
 
 int p101_semctl(const struct p101_env *env, struct p101_error *err, int semid, int semnum, int cmd)
 {
+    int p101_single_result_;
     int ret_val;
 
     P101_TRACE(env);
-    P101_WRAPPER_FAULT_RETURN(env, err, -1);
+    P101_WRAPPER_FAULT_RETURN(env, err, ret_val, -1);
 
     if(semctl_uses_arg(cmd))
     {
         P101_ERROR_RAISE_ERRNO(err, EINVAL);
-        P101_TRACE_EXIT(env);
-        return -1;
+        P101_WRAPPER_DONE(env);
+        p101_single_result_ = -1;
+        goto p101_single_exit_;
     }
 
     errno   = 0;
@@ -35,21 +37,27 @@ int p101_semctl(const struct p101_env *env, struct p101_error *err, int semid, i
     }
 
     P101_TRACE_EXIT(env);
-    return ret_val;
+    p101_single_result_ = ret_val;
+    goto p101_single_exit_;
+
+p101_single_exit_:
+    return p101_single_result_;
 }
 
 int p101_semctl_arg(const struct p101_env *env, struct p101_error *err, int semid, int semnum, int cmd, union p101_semun arg)
 {
+    int p101_single_result_;
     int ret_val;
 
     P101_TRACE(env);
-    P101_WRAPPER_FAULT_RETURN(env, err, -1);
+    P101_WRAPPER_FAULT_RETURN(env, err, ret_val, -1);
 
     if(!semctl_uses_arg(cmd))
     {
         P101_ERROR_RAISE_ERRNO(err, EINVAL);
-        P101_TRACE_EXIT(env);
-        return -1;
+        P101_WRAPPER_DONE(env);
+        p101_single_result_ = -1;
+        goto p101_single_exit_;
     }
 
     errno = 0;
@@ -67,7 +75,11 @@ int p101_semctl_arg(const struct p101_env *env, struct p101_error *err, int semi
         P101_ERROR_RAISE_ERRNO(err, errno);
     }
     P101_TRACE_EXIT(env);
-    return ret_val;
+    p101_single_result_ = ret_val;
+    goto p101_single_exit_;
+
+p101_single_exit_:
+    return p101_single_result_;
 }
 
 int p101_semget(const struct p101_env *env, struct p101_error *err, key_t key, int nsems, int semflg)
@@ -75,7 +87,7 @@ int p101_semget(const struct p101_env *env, struct p101_error *err, key_t key, i
     int ret_val;
 
     P101_TRACE(env);
-    P101_WRAPPER_FAULT_RETURN(env, err, -1);
+    P101_WRAPPER_FAULT_RETURN(env, err, ret_val, -1);
     errno   = 0;
     ret_val = semget(key, nsems, semflg);
 
@@ -88,7 +100,7 @@ int p101_semget(const struct p101_env *env, struct p101_error *err, key_t key, i
         P101_TRACK_INTEGER_RESOURCE_ACQUIRE(env, "sysv-semaphore-set", ret_val, 0U, "created-exclusive");
     }
 
-    P101_TRACE_EXIT(env);
+    P101_WRAPPER_DONE(env);
     return ret_val;
 }
 
@@ -97,7 +109,7 @@ int p101_semop(const struct p101_env *env, struct p101_error *err, int semid, st
     int ret_val;
 
     P101_TRACE(env);
-    P101_WRAPPER_FAULT_RETURN(env, err, -1);
+    P101_WRAPPER_FAULT_RETURN(env, err, ret_val, -1);
     errno   = 0;
     ret_val = semop(semid, sops, nsops);
 
@@ -106,6 +118,6 @@ int p101_semop(const struct p101_env *env, struct p101_error *err, int semid, st
         P101_ERROR_RAISE_ERRNO(err, errno);
     }
 
-    P101_TRACE_EXIT(env);
+    P101_WRAPPER_DONE(env);
     return ret_val;
 }

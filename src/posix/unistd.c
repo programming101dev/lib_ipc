@@ -19,6 +19,7 @@
 
 int p101_pipe(const struct p101_env *env, struct p101_error *err, int fildes[2])
 {
+    int p101_single_result_;
     int ret_val;
     int fault;
 
@@ -30,7 +31,8 @@ int p101_pipe(const struct p101_env *env, struct p101_error *err, int fildes[2])
         P101_ERROR_RAISE_ERRNO(err, fault);
         P101_TRACE_EXIT(env);
 
-        return -1;
+        p101_single_result_ = -1;
+        goto p101_single_exit_;
     }
 
     errno   = 0;
@@ -50,5 +52,9 @@ int p101_pipe(const struct p101_env *env, struct p101_error *err, int fildes[2])
 
     P101_TRACE_EXIT(env);
 
-    return ret_val;
+    p101_single_result_ = ret_val;
+    goto p101_single_exit_;
+
+p101_single_exit_:
+    return p101_single_result_;
 }
