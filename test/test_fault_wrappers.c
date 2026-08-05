@@ -349,8 +349,8 @@ static void test_p101_msgctl(struct p101_env *env, struct p101_error *err)
                 p101_error_destroy(native_err);
                 _Exit(77);
             }
-            struct __msqid_ds_new native_argument_4 = {0};
-            int                   native_result     = p101_msgctl(native_env, native_err, 0, 0, &native_argument_4);
+            struct msqid_ds native_argument_4 = {0};
+            int             native_result     = p101_msgctl(native_env, native_err, 0, 0, &native_argument_4);
             (void)native_result;
             p101_env_destroy(native_env);
             p101_error_destroy(native_err);
@@ -1343,8 +1343,8 @@ static void test_p101_shmctl(struct p101_env *env, struct p101_error *err)
                 p101_error_destroy(native_err);
                 _Exit(77);
             }
-            struct __shmid_ds_new native_argument_4 = {0};
-            int                   native_result     = p101_shmctl(native_env, native_err, 0, 0, &native_argument_4);
+            struct shmid_ds native_argument_4 = {0};
+            int             native_result     = p101_shmctl(native_env, native_err, 0, 0, &native_argument_4);
             (void)native_result;
             p101_env_destroy(native_env);
             p101_error_destroy(native_err);
