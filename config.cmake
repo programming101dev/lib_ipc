@@ -19,10 +19,22 @@ set(BSD_STANDARD_FLAGS -D_BSD_SOURCE -D__BSD_VISIBLE)
 
 set(LIBRARY_TARGETS p101_ipc)
 set(p101_ipc_SOURCES
-        src/ipc.c
+        src/sys/ipc.c
+        src/sys/mman.c
+        src/sys/msg.c
+        src/sys/sem.c
+        src/sys/shm.c
+        src/sys/stat.c
+        src/unistd.c
 )
 set(p101_ipc_HEADERS
-        include/p101_ipc/ipc.h
+        include/p101_ipc/p101_unistd.h
+        include/p101_ipc/sys/p101_ipc.h
+        include/p101_ipc/sys/p101_mman.h
+        include/p101_ipc/sys/p101_msg.h
+        include/p101_ipc/sys/p101_sem.h
+        include/p101_ipc/sys/p101_shm.h
+        include/p101_ipc/sys/p101_stat.h
 )
 set(p101_ipc_LINK_LIBRARIES
         p101_error

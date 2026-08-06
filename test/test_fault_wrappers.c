@@ -10,7 +10,13 @@
 #include <netinet/in.h>
 #include <p101_env/env.h>
 #include <p101_error/error.h>
-#include <p101_ipc/ipc.h>
+#include <p101_ipc/p101_unistd.h>
+#include <p101_ipc/sys/p101_ipc.h>
+#include <p101_ipc/sys/p101_mman.h>
+#include <p101_ipc/sys/p101_msg.h>
+#include <p101_ipc/sys/p101_sem.h>
+#include <p101_ipc/sys/p101_shm.h>
+#include <p101_ipc/sys/p101_stat.h>
 #include <pthread.h>
 #include <search.h>
 #include <signal.h>
