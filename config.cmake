@@ -19,13 +19,7 @@ set(BSD_STANDARD_FLAGS -D_BSD_SOURCE -D__BSD_VISIBLE)
 
 set(LIBRARY_TARGETS p101_ipc)
 set(p101_ipc_SOURCES
-        src/posix/sys/stat.c
-        src/posix/unistd.c
-        src/posix_optional/sys/mman.c
-        src/posix_xsi/sys/ipc.c
-        src/posix_xsi/sys/msg.c
-        src/posix_xsi/sys/sem.c
-        src/posix_xsi/sys/shm.c
+        src/ipc.c
 )
 set(p101_ipc_HEADERS
         include/p101_ipc/ipc.h
