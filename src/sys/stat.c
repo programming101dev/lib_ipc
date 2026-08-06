@@ -39,8 +39,6 @@
  * limitations under the License.
  */
 
-#include <p101_env/wrapper.h>
-
 int p101_mkfifo(const struct p101_env *env, struct p101_error *err, const char *path, mode_t mode)
 {
     int ret_val;
