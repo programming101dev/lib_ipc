@@ -1,2 +1,2 @@
 # p101_semctl_arg is the typed implementation of semctl's variadic boundary.
-src/ipc.c		c:@F@semctl
+src/sys/sem.c		c:@F@semctl
