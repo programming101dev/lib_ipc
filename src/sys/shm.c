@@ -76,7 +76,8 @@ int p101_shmctl(const struct p101_env *env, struct p101_error *err, int shmid, i
 
 int p101_shmdt(const struct p101_env *env, struct p101_error *err, const void *shmaddr)
 {
-    int ret_val;
+    char resource_id[P101_ENV_POINTER_RESOURCE_ID_SIZE];
+    int  ret_val;
 
     P101_TRACE(env);
     P101_WRAPPER_FAULT_RETURN(env, err, ret_val, -1);
@@ -86,6 +87,12 @@ int p101_shmdt(const struct p101_env *env, struct p101_error *err, const void *s
         ret_val = -1;
         goto p101_wrapper_done_;
     }
+
+    /*
+     * shmdt detaches the segment shmaddr names, so spell the id while the
+     * attachment is still there rather than reading a detached pointer.
+     */
+    p101_env_pointer_resource_id(resource_id, sizeof(resource_id), shmaddr);
     errno   = 0;
     ret_val = shmdt(shmaddr);
 
@@ -95,7 +102,7 @@ int p101_shmdt(const struct p101_env *env, struct p101_error *err, const void *s
     }
     else
     {
-        P101_TRACK_POINTER_RESOURCE_RELEASE(env, P101_RESOURCE_CLASS_SYSV_SHARED_MEMORY_ATTACHMENT, shmaddr, NULL);
+        P101_TRACK_RESOURCE_RELEASE(env, P101_RESOURCE_CLASS_SYSV_SHARED_MEMORY_ATTACHMENT, resource_id, NULL);
     }
 
     P101_WRAPPER_DONE(env);
