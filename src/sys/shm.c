@@ -15,6 +15,7 @@
  */
 
 #include "p101_ipc/sys/p101_shm.h"
+#include <p101_env/resource_classes.h>
 #include <p101_env/wrapper.h>
 
 void *p101_shmat(const struct p101_env *env, struct p101_error *err, int shmid, const void *shmaddr, int shmflg)
@@ -38,7 +39,7 @@ void *p101_shmat(const struct p101_env *env, struct p101_error *err, int shmid, 
     }
     else
     {
-        P101_TRACK_POINTER_RESOURCE_ACQUIRE(env, "sysv-shared-memory-attachment", ret_val, 0U, NULL);
+        P101_TRACK_POINTER_RESOURCE_ACQUIRE(env, P101_RESOURCE_CLASS_SYSV_SHARED_MEMORY_ATTACHMENT, ret_val, 0U, NULL);
     }
 
     P101_WRAPPER_DONE(env);
@@ -66,7 +67,7 @@ int p101_shmctl(const struct p101_env *env, struct p101_error *err, int shmid, i
     }
     else if(cmd == IPC_RMID)
     {
-        P101_TRACK_INTEGER_RESOURCE_RELEASE(env, "sysv-shared-memory", shmid, NULL);
+        P101_TRACK_INTEGER_RESOURCE_RELEASE(env, P101_RESOURCE_CLASS_SYSV_SHARED_MEMORY, shmid, NULL);
     }
 
     P101_WRAPPER_DONE(env);
@@ -75,8 +76,7 @@ int p101_shmctl(const struct p101_env *env, struct p101_error *err, int shmid, i
 
 int p101_shmdt(const struct p101_env *env, struct p101_error *err, const void *shmaddr)
 {
-    char resource_id[P101_ENV_POINTER_RESOURCE_ID_SIZE];
-    int  ret_val;
+    int ret_val;
 
     P101_TRACE(env);
     P101_WRAPPER_FAULT_RETURN(env, err, ret_val, -1);
@@ -86,7 +86,6 @@ int p101_shmdt(const struct p101_env *env, struct p101_error *err, const void *s
         ret_val = -1;
         goto p101_wrapper_done_;
     }
-    p101_env_pointer_resource_id(resource_id, sizeof(resource_id), shmaddr);
     errno   = 0;
     ret_val = shmdt(shmaddr);
 
@@ -96,7 +95,7 @@ int p101_shmdt(const struct p101_env *env, struct p101_error *err, const void *s
     }
     else
     {
-        P101_TRACK_RESOURCE_RELEASE(env, "sysv-shared-memory-attachment", resource_id, NULL);
+        P101_TRACK_POINTER_RESOURCE_RELEASE(env, P101_RESOURCE_CLASS_SYSV_SHARED_MEMORY_ATTACHMENT, shmaddr, NULL);
     }
 
     P101_WRAPPER_DONE(env);
@@ -118,7 +117,7 @@ int p101_shmget(const struct p101_env *env, struct p101_error *err, key_t key, s
     }
     else if((shmflg & IPC_CREAT) != 0 && (shmflg & IPC_EXCL) != 0)
     {
-        P101_TRACK_INTEGER_RESOURCE_ACQUIRE(env, "sysv-shared-memory", ret_val, size, "created-exclusive");
+        P101_TRACK_INTEGER_RESOURCE_ACQUIRE(env, P101_RESOURCE_CLASS_SYSV_SHARED_MEMORY, ret_val, size, "created-exclusive");
     }
 
     P101_WRAPPER_DONE(env);

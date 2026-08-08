@@ -33,6 +33,7 @@
  * limitations under the License.
  */
 
+#include <string.h>
 #include <sys/mman.h>
 
 static bool posix_shared_memory_name_is_invalid(const char *name);
@@ -41,14 +42,31 @@ static bool posix_shared_memory_name_is_invalid(const char *name)
 {
     bool invalid;
 
-    invalid = (name == NULL || name[0] != '/' || name[1] == '\0') != 0;
-    for(size_t index = 1U; !invalid && name[index] != '\0'; index++)
+#ifdef SHM_ANON
+    /*
+     * On FreeBSD SHM_ANON is a sentinel pointer value, not a readable string,
+     * so it has to be recognised before anything dereferences name. An
+     * anonymous mapping has no name to validate: pass it straight through.
+     */
+    if(name == SHM_ANON)
     {
-        if(name[index] == '/')
+        invalid = false;
+    }
+    else
+#endif
+    {
+        /*
+         * Deliberately strict: a leading '/' is required, the name may not be
+         * '/' alone, and no interior '/' is accepted.
+         */
+        invalid = (name == NULL || name[0] != '/' || name[1] == '\0') != 0;
+
+        if(!invalid && strchr(name + 1, '/') != NULL)
         {
             invalid = true;
         }
     }
+
     return invalid;
 }
 

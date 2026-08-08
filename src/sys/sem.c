@@ -15,6 +15,7 @@
  */
 
 #include "p101_ipc/sys/p101_sem.h"
+#include <p101_env/resource_classes.h>
 #include <p101_env/wrapper.h>
 
 static bool semctl_uses_arg(int cmd);
@@ -72,7 +73,7 @@ int p101_semctl(const struct p101_env *env, struct p101_error *err, int semid, i
     }
     else if(cmd == IPC_RMID)
     {
-        P101_TRACK_INTEGER_RESOURCE_RELEASE(env, "sysv-semaphore-set", semid, NULL);
+        P101_TRACK_INTEGER_RESOURCE_RELEASE(env, P101_RESOURCE_CLASS_SYSV_SEMAPHORE_SET, semid, NULL);
     }
 
     P101_WRAPPER_DONE(env);
@@ -141,7 +142,7 @@ int p101_semget(const struct p101_env *env, struct p101_error *err, key_t key, i
     }
     else if((semflg & IPC_CREAT) != 0 && (semflg & IPC_EXCL) != 0)
     {
-        P101_TRACK_INTEGER_RESOURCE_ACQUIRE(env, "sysv-semaphore-set", ret_val, 0U, "created-exclusive");
+        P101_TRACK_INTEGER_RESOURCE_ACQUIRE(env, P101_RESOURCE_CLASS_SYSV_SEMAPHORE_SET, ret_val, 0U, "created-exclusive");
     }
 
     P101_WRAPPER_DONE(env);

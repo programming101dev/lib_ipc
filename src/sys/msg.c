@@ -15,6 +15,7 @@
  */
 
 #include "p101_ipc/sys/p101_msg.h"
+#include <p101_env/resource_classes.h>
 #include <p101_env/wrapper.h>
 
 int p101_msgctl(const struct p101_env *env, struct p101_error *err, int msqid, int cmd, struct msqid_ds *buf)
@@ -38,7 +39,7 @@ int p101_msgctl(const struct p101_env *env, struct p101_error *err, int msqid, i
     }
     else if(cmd == IPC_RMID)
     {
-        P101_TRACK_INTEGER_RESOURCE_RELEASE(env, "sysv-message-queue", msqid, NULL);
+        P101_TRACK_INTEGER_RESOURCE_RELEASE(env, P101_RESOURCE_CLASS_SYSV_MESSAGE_QUEUE, msqid, NULL);
     }
 
     P101_WRAPPER_DONE(env);
@@ -60,7 +61,7 @@ int p101_msgget(const struct p101_env *env, struct p101_error *err, key_t key, i
     }
     else if((msgflg & IPC_CREAT) != 0 && (msgflg & IPC_EXCL) != 0)
     {
-        P101_TRACK_INTEGER_RESOURCE_ACQUIRE(env, "sysv-message-queue", ret_val, 0U, "created-exclusive");
+        P101_TRACK_INTEGER_RESOURCE_ACQUIRE(env, P101_RESOURCE_CLASS_SYSV_MESSAGE_QUEUE, ret_val, 0U, "created-exclusive");
     }
 
     P101_WRAPPER_DONE(env);
