@@ -33,7 +33,6 @@
  * limitations under the License.
  */
 
-#include <string.h>
 #include <sys/mman.h>
 
 static bool posix_shared_memory_name_is_invalid(const char *name);
@@ -61,9 +60,16 @@ static bool posix_shared_memory_name_is_invalid(const char *name)
          */
         invalid = (name == NULL || name[0] != '/' || name[1] == '\0') != 0;
 
-        if(!invalid && strchr(name + 1, '/') != NULL)
+        /*
+         * Scanned by hand rather than with strchr: this runs below the wrapper
+         * layer, with no env or error object to give p101_strchr.
+         */
+        for(size_t index = 1U; !invalid && name[index] != '\0'; index++)
         {
-            invalid = true;
+            if(name[index] == '/')
+            {
+                invalid = true;
+            }
         }
     }
 
